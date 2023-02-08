@@ -12,3 +12,16 @@ export const getOne = async (userId) => {
 
     return result.user;
 }
+
+export const addOne = async (userData) => {
+    const response = await fetch(baseURL, {
+        method: 'POST',
+        headers: { 
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    });
+    const result = await response.json();
+
+    return result.user;
+}

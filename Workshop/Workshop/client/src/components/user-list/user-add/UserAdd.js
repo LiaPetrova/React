@@ -1,11 +1,14 @@
-export const UserEdit = ({ user, onClose }) => {
-  return (
-    <div className="overlay">
+export const UserAdd = ({
+    onClose,
+    onUserCreate
+}) => {
+    return (
+        <div className="overlay">
       <div className="backdrop" onClick={onClose}></div>
       <div className="modal">
         <div className="user-container">
           <header className="headers">
-            <h2>Edit User</h2>
+            <h2>Add User</h2>
             <button className="btn close" onClick={onClose}>
               <svg
                 aria-hidden="true"
@@ -24,7 +27,7 @@ export const UserEdit = ({ user, onClose }) => {
               </svg>
             </button>
           </header>
-          <form>
+          <form onSubmit={onUserCreate}>
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="firstName">First name</label>
@@ -156,5 +159,5 @@ export const UserEdit = ({ user, onClose }) => {
         </div>
       </div>
     </div>
-  );
+    );
 };
