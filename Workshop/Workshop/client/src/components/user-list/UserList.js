@@ -21,8 +21,8 @@ export const UserList = () => {
   const userActionClickHandler = (userId, action) => {
     userService.getOne(userId).then((user) => {
       setUserAction({
-        action: action,
-        user: user,
+        action,
+        user,
       });
     });
   };
@@ -31,33 +31,74 @@ export const UserList = () => {
     setUserAction({ action: null, user: null });
   };
 
-  const userCreateHandler = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const {
-        firstName,
-        lastName,
-        email,
-        imageUrl,
-        phoneNumber,
-        ...address    
-    } = Object.fromEntries(formData);
+    const userCreateHandler = (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const {
+            firstName,
+            lastName,
+            email,
+            imageUrl,
+            phoneNumber,
+            ...address    
+        } = Object.fromEntries(formData);
 
-    const userData = {
-        firstName,
-        lastName,
-        email,
-        imageUrl,
-        phoneNumber,
-        address 
-    };
+        const userData = {
+            firstName,
+            lastName,
+            email,
+            imageUrl,
+            phoneNumber,
+            address 
+        };
 
-    userService.addOne(userData)
-    .then(user => {
-        setUsers(oldUsers => [...oldUsers, user] );
-        closeHandler();
-    });
-  }
+        userService.addOne(userData)
+        .then(user => {
+            setUsers(oldUsers => [...oldUsers, user]);
+            closeHandler();
+        }
+        );
+        
+
+    }
+    const userEditHandler = (e, userId) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const {
+            firstName,
+            lastName,
+            email,
+            imageUrl,
+            phoneNumber,
+            ...address    
+        } = Object.fromEntries(formData);
+    
+        const userData = {
+            firstName,
+            lastName,
+            email,
+            imageUrl,
+            phoneNumber,
+            address 
+        };
+
+        userService.editOne(userId, userData)
+        .then(user => {
+            userService.getAll()
+            .then(users => setUsers(users));
+            closeHandler();
+        });
+    }
+
+    const userDeleteHandler = (userId) => {
+        console.log(userId)
+        userService.deleteOne(userId)
+        .then(result => {
+            userService.getAll()
+            .then(users => setUsers(users));
+            closeHandler();
+        })
+    }
 
   return (
     <>
@@ -69,11 +110,11 @@ export const UserList = () => {
       )}
 
       {userAction.action === UserActions.Edit && (
-        <UserEdit onClose={closeHandler} user={userAction.user} />
+        <UserEdit onClose={closeHandler} user={userAction.user} onUserEdit={userEditHandler}/>
       )}
 
       {userAction.action === UserActions.Delete && (
-        <UserDelete onClose={closeHandler} user={userAction.user} />
+        <UserDelete onClose={closeHandler} user={userAction.user}  onUserDelete={userDeleteHandler}/>
       )}
 
       {userAction.action === UserActions.Add && (
