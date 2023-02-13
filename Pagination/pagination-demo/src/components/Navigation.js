@@ -1,14 +1,22 @@
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import styles from './Navigation.module.css';
 
 export const Navigation = () => {
+
+    const setNavStyle = ({ isActive }) => {
+        return isActive 
+            ? styles['active-link']
+            : undefined;
+    }
+
     return (
         <nav>
             <ul>
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/about">About</Link></li>
-                <li><Link to="/contacts">Contacts</Link></li>
-                <li><Link to="/pricing">Pricing</Link></li>
-                <li><Link to="/pricing/premium">Pricing Premium</Link></li>
+                <li><NavLink className={setNavStyle} to="/" >Home</NavLink></li>
+                <li><NavLink className={setNavStyle} to="/about">About</NavLink></li>
+                <li><NavLink className={setNavStyle} to="/contacts">Contacts</NavLink></li>
+                <li><NavLink className={setNavStyle} to="/pricing">Pricing</NavLink></li>
+                <li><NavLink className={setNavStyle} to="/pricing/premium">Pricing Premium</NavLink></li>
             </ul>
         </nav>
     );

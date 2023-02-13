@@ -12,6 +12,9 @@ export const Planet = () => {
         .then(res => res.json())
         .then(result => {
             setPlanet(result);
+        })
+        .catch(() => {
+            navigate('/not-found');
         });
     }, [planetId]);
 
