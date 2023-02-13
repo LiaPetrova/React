@@ -27,37 +27,25 @@ export const UserList = () => {
     });
   };
 
+  const openUserAddClickHandler = () => {
+    setUserAction({
+        action: UserActions.Add
+    })
+  };
+
   const closeHandler = () => {
     setUserAction({ action: null, user: null });
   };
 
-    const userCreateHandler = (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const {
-            firstName,
-            lastName,
-            email,
-            imageUrl,
-            phoneNumber,
-            ...address    
-        } = Object.fromEntries(formData);
-
-        const userData = {
-            firstName,
-            lastName,
-            email,
-            imageUrl,
-            phoneNumber,
-            address 
-        };
+    const userCreateHandler = (userData) => {
 
         userService.addOne(userData)
         .then(user => {
             setUsers(oldUsers => [...oldUsers, user]);
             closeHandler();
         }
-        );
+        )
+        .catch(err => console.log(err));
         
 
     }
@@ -91,7 +79,6 @@ export const UserList = () => {
     }
 
     const userDeleteHandler = (userId) => {
-        console.log(userId)
         userService.deleteOne(userId)
         .then(result => {
             userService.getAll()
@@ -297,7 +284,7 @@ export const UserList = () => {
       </table>
     </div>
 
-    <button className="btn-add btn" onClick={() => userActionClickHandler(null, UserActions.Add)} >Add new user</button>
+    <button className="btn-add btn" onClick={openUserAddClickHandler} >Add new user</button>
     </>
   );
 };

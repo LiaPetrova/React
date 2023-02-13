@@ -22,6 +22,10 @@ export const addOne = async (userData) => {
         },
         body: JSON.stringify(userData)
     });
+
+    if(!response.ok) {
+        throw { message: 'Enable to create user'}
+    }
     const result = await response.json();
 
     return result.user;
