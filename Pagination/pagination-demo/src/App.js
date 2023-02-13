@@ -6,6 +6,7 @@ import { Home } from "./components/Home";
 import { Navigation } from "./components/Navigation";
 import { PremiumPricing } from "./components/PremiumPricing";
 import { Pricing } from "./components/Pricing";
+import { Planet } from "./components/Planet";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/contacts" element={<Contacts/>}/>
         <Route path="/pricing/*" element={<Pricing/>}/>
         <Route path="/pricing/premium" element={<PremiumPricing/>}/>
+        <Route path="/planets/:planetId" element={<Planet/>}/>
         <Route path="/*" element={<PageNotFound/>}/>
       </Routes>
     </div>
