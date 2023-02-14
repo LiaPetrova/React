@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
 
 export const Planet = () => {
     const [ planet, setPlanet ] = useState({});
-    const { planetId } = useParams();
+    const [film, setFilm] = useState({});
+    const params = useParams();
+    const { planetId, filmId } = params;
     const navigate = useNavigate();
 
 
@@ -18,6 +20,18 @@ export const Planet = () => {
         });
     }, [planetId]);
 
+    useEffect(() => {
+        if(planet.films?.length > 0 && filmId) {
+            let fId = Number(filmId);
+            fetch(planet.films[fId])
+                .then(res => res.json())
+                .then(result =>
+                    setFilm(result));
+
+        }
+
+    }, [planetId, filmId]);
+
 
     const nextPlanetHandler = () => {
         navigate(`/planets/${Number(planetId) + 1}`)
@@ -30,6 +44,17 @@ export const Planet = () => {
             <li>{planet.population}</li>
         </ul>
         <button onClick={nextPlanetHandler}>Next</button>
+            <nav>
+                <ul>
+                    {planet.films?.map((x, i) => 
+                    <li key={x}><Link to={`films/${i}`}>Film {i + 1}</Link></li>)}
+                </ul>
+            </nav>
+        <section>
+           <Routes>
+                <Route path="films/*" element={<h3>{film.title}</h3>}/>
+            </Routes> 
+        </section>
         </>
     );
 };
