@@ -7,6 +7,12 @@ export const GameDetails = ({
 }) => {
 
     const { gameId } = useParams();
+
+    const [errors, setErrors] = useState({
+        username: '',
+        comment: ''
+    });
+
     const game = games.find(x => x._id === gameId);
 
     const [comment, setComment] = useState({
@@ -32,6 +38,23 @@ export const GameDetails = ({
         });
     }
 
+    const lengthValidator = (e, minLength, maxLength = Number.MAX_SAFE_INTEGER) => {
+        const value = e.target.value;
+        const inputName = e.target.name.slice(0,1).toUpperCase() + e.target.name.slice(1);
+        let errorMessage = '';
+
+        if (value.length < minLength) {
+            errorMessage = `${inputName} must be at least ${minLength} characters long.`
+        } else if (value.length > maxLength) {
+            errorMessage`${inputName} can't be longer than ${maxLength} characters long.`
+        }
+
+        setErrors(state => ({
+            ...state,
+            [e.target.name]: errorMessage
+        }));
+    };
+
     return (
         <section id="game-details">
             <h1>Game Details</h1>
@@ -51,7 +74,7 @@ export const GameDetails = ({
                     {game.comments
                         ? <ul>
                             {game.comments.map(x =>
-                                <li className="comment">
+                                <li key={x._id} className="comment">
                                     <p>{x}</p>
                                 </li>)}
                         </ul>
@@ -70,7 +93,7 @@ export const GameDetails = ({
                     </a>
                 </div>
             </div>
-            
+
             {/* Add Comment ( Only for logged-in users, which is not creators of the current game ) */}
             <article className="create-comment">
                 <label>Add new comment:</label>
@@ -80,14 +103,23 @@ export const GameDetails = ({
                         value={comment.username}
                         placeholder="John Doe"
                         onChange={onChange}
+                        onBlur={(e) => lengthValidator(e, 3, 10)}
                         name="username"
                     />
+                    {errors.username &&
+                        <div className="error" style={{ color: 'darkred' }}>{errors.username}</div>
+                    }
                     <textarea
                         name="comment"
                         placeholder="Comment......"
                         value={comment.comment}
                         onChange={onChange}
+                        onBlur={(e) => lengthValidator(e, 2)}
                     />
+
+                    {errors.comment &&
+                        <div className="error" style={{ color: 'darkred' }}>{errors.comment}</div>
+                    }
 
                     <input
                         className="btn submit"

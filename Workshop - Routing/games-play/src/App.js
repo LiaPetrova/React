@@ -4,7 +4,7 @@ import uniqid from 'uniqid';
 import "./App.css";
 
 import * as gameService from "./services/gameService";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { Catalog } from "./components/Catalog/Catalog";
 import { Create } from "./components/Create/Create";
 import Header from "./components/Header";
@@ -16,6 +16,7 @@ import { GameDetails } from "./components/GameDetails.js/GameDetails";
 function App() {
 
     const [games, setGames] = useState([]);
+    const navigate = useNavigate();
 
     const addGameHandler = (gameData) => {
         setGames(state => {
@@ -27,6 +28,8 @@ function App() {
                 }
             ]
         });
+
+        navigate('/catalog');
     };
 
     useEffect(() => {
