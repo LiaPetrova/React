@@ -6,7 +6,7 @@ import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { Catalog } from "./components/Catalog/Catalog";
 import { Create } from "./components/Create/Create";
-import  Header  from "./components/Header";
+import Header from "./components/Header";
 import { Home } from "./components/Home/Home";
 import { Register } from "./components/Home/LatestGame/Register/Register";
 import { Login } from "./components/Login/Login";
@@ -23,6 +23,19 @@ function App() {
             })
     }, []);
 
+    const addComment = (gameId, comment) => {
+        setGames(state => {
+            const game = games.find(x => x._id === gameId);
+            const comments = game.comments || [];
+            comments.push(comment);
+
+            return [
+                ...state.filter(x => x._id !== game._id),
+                { ...game, comments }
+            ]
+        })
+    }
+
     return (
         <div id="box">
 
@@ -36,7 +49,7 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/create" element={<Create />} />
                     <Route path="/catalog" element={<Catalog games={games} />} />
-                    <Route path="/catalog/:gameId" element={<GameDetails games={games} />} />
+                    <Route path="/catalog/:gameId" element={<GameDetails games={games} addComment={addComment} />} />
 
                 </Routes>
 
@@ -74,7 +87,7 @@ function App() {
         </form>
       </section> */}
 
-            
+
         </div>
     );
 }
