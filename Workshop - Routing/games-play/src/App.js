@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import * as gameService from "./services/gameService";
+import uniqid from 'uniqid';
 
 import "./App.css";
 
+import * as gameService from "./services/gameService";
 import { Route, Routes } from "react-router-dom";
 import { Catalog } from "./components/Catalog/Catalog";
 import { Create } from "./components/Create/Create";
@@ -15,6 +16,18 @@ import { GameDetails } from "./components/GameDetails.js/GameDetails";
 function App() {
 
     const [games, setGames] = useState([]);
+
+    const addGameHandler = (gameData) => {
+        setGames(state => {
+            return [
+                ...state,
+                {
+                    ...gameData,
+                    _id: uniqid()
+                }
+            ]
+        });
+    };
 
     useEffect(() => {
         gameService.getAll()
@@ -47,7 +60,7 @@ function App() {
                     <Route path="/" element={<Home games={games} />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/create" element={<Create />} />
+                    <Route path="/create" element={<Create addGameHandler={addGameHandler} />} />
                     <Route path="/catalog" element={<Catalog games={games} />} />
                     <Route path="/catalog/:gameId" element={<GameDetails games={games} addComment={addComment} />} />
 

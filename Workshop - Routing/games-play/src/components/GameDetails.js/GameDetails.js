@@ -7,6 +7,8 @@ export const GameDetails = ({
 }) => {
 
     const { gameId } = useParams();
+    const game = games.find(x => x._id === gameId);
+
     const [comment, setComment] = useState({
         username: '',
         comment: ''
@@ -30,8 +32,6 @@ export const GameDetails = ({
         });
     }
 
-    const game = games.find(x => x._id === gameId);
-    console.log(game);
     return (
         <section id="game-details">
             <h1>Game Details</h1>
@@ -59,7 +59,6 @@ export const GameDetails = ({
                     }
 
 
-                    {/* Display paragraph: If there are no games in the database */}
                 </div>
                 {/* Edit/Delete buttons ( Only for creator of this game )  */}
                 <div className="buttons">
@@ -71,7 +70,7 @@ export const GameDetails = ({
                     </a>
                 </div>
             </div>
-            {/* Bonus */}
+            
             {/* Add Comment ( Only for logged-in users, which is not creators of the current game ) */}
             <article className="create-comment">
                 <label>Add new comment:</label>
