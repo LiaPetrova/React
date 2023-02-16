@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import uniqid from 'uniqid';
 
 import "./App.css";
@@ -9,9 +9,10 @@ import { Catalog } from "./components/Catalog/Catalog";
 import { Create } from "./components/Create/Create";
 import Header from "./components/Header";
 import { Home } from "./components/Home/Home";
-import { Register } from "./components/Home/LatestGame/Register/Register";
 import { Login } from "./components/Login/Login";
 import { GameDetails } from "./components/GameDetails.js/GameDetails";
+
+const Register = lazy(() => import('./components/Register/Register'));
 
 function App() {
 
@@ -62,7 +63,11 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home games={games} />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+                    <Route path="/register" element={
+                        <Suspense fallback={<span>Loading...</span>} >
+                            <Register />
+                        </Suspense>
+                    } />
                     <Route path="/create" element={<Create addGameHandler={addGameHandler} />} />
                     <Route path="/catalog" element={<Catalog games={games} />} />
                     <Route path="/catalog/:gameId" element={<GameDetails games={games} addComment={addComment} />} />
