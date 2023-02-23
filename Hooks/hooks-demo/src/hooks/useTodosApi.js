@@ -10,16 +10,26 @@ export const useTodosApi = () => {
 
     const createTodo = (text) => {
 
-        const body = {  text, isCompleted: false}
+        const body = { text, isCompleted: false }
         return fetch(url, {
             method: 'POST',
             body: JSON.stringify(body)
         })
-        .then(res => res.json());
+            .then(res => res.json());
+    }
+
+    const updateTodo = (todoId, data) => {
+        return fetch(`${url}/${todoId}`,
+            {
+                method: 'PUT',
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
     }
 
     return {
         removeTodo,
-        createTodo
+        createTodo,
+        updateTodo
     }
 }

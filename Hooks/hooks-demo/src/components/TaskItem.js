@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TaskContext } from "../contexts/TaskContext";
 import styles from './TaskItem.module.css';
 
@@ -6,6 +6,7 @@ export const TaskItem = ({
     task
 }) => {
 
+    const [isEdit, setIsEdit] = useState(false);
     useEffect(() => {
         console.log('Mount');
 
@@ -14,15 +15,39 @@ export const TaskItem = ({
         }
     }, []);
 
-    const { taskDeleteHandler, toggleTasks } = useContext(TaskContext);
+    const { taskDeleteHandler, toggleTasks, editTasks} = useContext(TaskContext);
+
+
+    const classNames = [
+        task.isCompleted ? styles.completed : '',
+        styles['task-item']
+    ];
+
+    const taskEditHandler = () => {
+        setIsEdit(true);
+    };
+
+    const onEdit = (e) => {
+        e.preventDefault();
+        const {text} = Object.fromEntries(new FormData(e.target));
+        editTasks({...task, text});
+        setIsEdit(false);
+    }
 
     return (
-        <>
-            <li>
-                <span onClick={() => toggleTasks(task._id)} className={task.isCompleted ? styles.completed : ''}>{task.text}</span>
-                <button onClick={() => taskDeleteHandler(task._id)}>x</button>
-            </li>
+        <li>
+            {isEdit
+                ? <form onSubmit={onEdit}>
+                    <input type="text" defaultValue={task.text} name='text' />
+                    <button>Edit</button>
+                </form>
 
-        </>
+                : <>
+                    <span onClick={() => toggleTasks(task)} className={classNames.join(' ')}>{task.text}</span>
+                    <button onClick={() => taskDeleteHandler(task._id)}>x</button>
+                    <button onClick={taskEditHandler}>Edit</button>
+                </>
+            }
+        </li>
     );
 };
