@@ -11,13 +11,19 @@ import Header from "./components/Header";
 import { Home } from "./components/Home/Home";
 import { Login } from "./components/Login/Login";
 import { GameDetails } from "./components/GameDetails.js/GameDetails";
+import { AuthContext } from "./contexts/AuthContext";
 
 const Register = lazy(() => import('./components/Register/Register'));
 
 function App() {
 
     const [games, setGames] = useState([]);
+    const [auth, setAuth] = useState({});
     const navigate = useNavigate();
+
+    const userLogin = (authData) => {
+        setAuth(authData);
+    }
 
     const addGameHandler = (gameData) => {
         setGames(state => {
@@ -33,13 +39,6 @@ function App() {
         navigate('/catalog');
     };
 
-    useEffect(() => {
-        gameService.getAll()
-            .then(result => {
-                setGames(result)
-            })
-    }, []);
-
     const addComment = (gameId, comment) => {
         setGames(state => {
             const game = games.find(x => x._id === gameId);
@@ -51,35 +50,39 @@ function App() {
                 { ...game, comments }
             ]
         })
-    }
+    };
+
+    useEffect(() => {
+        gameService.getAll()
+            .then(result => {
+                setGames(result)
+            })
+    }, []);
 
     return (
-        <div id="box">
+        <AuthContext.Provider value={{auth, userLogin}}>
+            <div id="box">
+                <Header />
 
-            <Header />
+                <main id="main-content">
+                    <Routes>
+                        <Route path="/" element={<Home games={games} />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={
+                            <Suspense fallback={<span>Loading...</span>} >
+                                <Register />
+                            </Suspense>
+                        } />
+                        <Route path="/create" element={<Create addGameHandler={addGameHandler} />} />
+                        <Route path="/catalog" element={<Catalog games={games} />} />
+                        <Route path="/catalog/:gameId" element={<GameDetails games={games} addComment={addComment} />} />
 
-            {/* Main Content */}
-            <main id="main-content">
-                <Routes>
-                    <Route path="/" element={<Home games={games} />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={
-                        <Suspense fallback={<span>Loading...</span>} >
-                            <Register />
-                        </Suspense>
-                    } />
-                    <Route path="/create" element={<Create addGameHandler={addGameHandler} />} />
-                    <Route path="/catalog" element={<Catalog games={games} />} />
-                    <Route path="/catalog/:gameId" element={<GameDetails games={games} addComment={addComment} />} />
+                    </Routes>
 
-                </Routes>
+                </main>
 
-            </main>
-
-
-
-            {/* Edit Page ( Only for the creator )*/}
-            {/* <section id="edit-page" className="auth">
+                {/* Edit Page ( Only for the creator )*/}
+                {/* <section id="edit-page" className="auth">
         <form id="edit">
           <div className="container">
             <h1>Edit Game</h1>
@@ -108,8 +111,8 @@ function App() {
         </form>
       </section> */}
 
-
-        </div>
+            </div>
+        </AuthContext.Provider>
     );
 }
 
