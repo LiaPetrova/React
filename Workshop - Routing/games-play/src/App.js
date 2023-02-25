@@ -12,6 +12,7 @@ import { Home } from "./components/Home/Home";
 import { Login } from "./components/Login/Login";
 import { GameDetails } from "./components/GameDetails.js/GameDetails";
 import { AuthContext } from "./contexts/AuthContext";
+import { Logout } from "./components/Logout/Logout";
 
 const Register = lazy(() => import('./components/Register/Register'));
 
@@ -23,7 +24,11 @@ function App() {
 
     const userLogin = (authData) => {
         setAuth(authData);
-    }
+    };
+
+    const userLogout = () => {
+        setAuth({});
+    };
 
     const addGameHandler = (gameData) => {
         setGames(state => {
@@ -60,7 +65,7 @@ function App() {
     }, []);
 
     return (
-        <AuthContext.Provider value={{auth, userLogin}}>
+        <AuthContext.Provider value={{user: auth, userLogin, userLogout}}>
             <div id="box">
                 <Header />
 
@@ -68,6 +73,7 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home games={games} />} />
                         <Route path="/login" element={<Login />} />
+                        <Route path="/logout" element={<Logout />} />
                         <Route path="/register" element={
                             <Suspense fallback={<span>Loading...</span>} >
                                 <Register />

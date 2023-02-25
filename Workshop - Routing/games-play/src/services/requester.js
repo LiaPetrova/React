@@ -1,21 +1,35 @@
-const request = async (method, url, data) => {
+const request = async (method, url, data, accessToken) => {
     try {
         let buildReqest;
         
         if(method === 'GET') {
-            buildReqest = fetch(url);
+            if(!accessToken) {
+                buildReqest = fetch(url);
+            } else {
+                buildReqest = fetch(url, {
+                    headers: {
+                        'X-Authorization': accessToken
+                    }
+                })
+            }
         } else {
             buildReqest = fetch(url, {
                 method,
                 headers: {
-                    'content-type': 'application/json'
+                    'content-type': 'application/json',
                 },
                 body: JSON.stringify(data)
             })
         }
 
         const response = await buildReqest;
-        const result = await response.json();
+        let result = null;
+        
+        if(response.status === 204) {   
+           return result = await response;
+        }
+
+        result = await response.json();
         
         return result;
     } catch (err) {
