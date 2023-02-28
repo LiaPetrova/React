@@ -8,11 +8,14 @@ export const GameContext = createContext();
 const gameReducer = (state, action) => {
     switch (action.type) {
         case 'ADD_GAMES':
-            return [...action.payload];
+            return action.payload.map(x => ({...x, comments: []}));
         case 'ADD_GAME':
             return [action.payload, ...state];
         case 'EDIT_GAME':
+            case 'FETCH_GAME_DETAILS':
             return state.map(x => x._id === action.gameId ? action.payload : x);
+        case 'ADD_COMMENT':
+            return state.map(x => x._id === action.gameId ? {...x, comments: [...x.comments, action.payload]} : x);
         default:
             return state;
     }
@@ -23,6 +26,7 @@ export const GameProvider = ({
 }) => {
 
     const [games, dispatch] = useReducer(gameReducer, []);
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -36,7 +40,18 @@ export const GameProvider = ({
             })
     }, []);
 
-    const navigate = useNavigate();
+    const fetchGameDetails = (gameId, gameDetails) => {
+        dispatch({
+            type: 'FETCH_GAME_DETAILS',
+            payload: gameDetails,
+            gameId
+        });
+    };
+
+    const selectGame = (gameId) => {
+        return games.find(x => x._id === gameId) ||{};
+    }
+
 
     const gameAdd = (gameData) => {
         dispatch({
@@ -56,6 +71,11 @@ export const GameProvider = ({
     }
 
     const addComment = (gameId, comment) => {
+        dispatch({
+            type: 'ADD_COMMENT',
+            payload: comment,
+            gameId
+        });
         // setGames(state => {
         //     const game = games.find(x => x._id === gameId);
         //     const comments = game.comments || [];
@@ -69,7 +89,7 @@ export const GameProvider = ({
     };
 
     return (
-        <GameContext.Provider value={{ games, gameAdd, gameEdit, addComment }}>
+        <GameContext.Provider value={{ games, gameAdd, gameEdit, addComment, fetchGameDetails, selectGame }}>
             {children}
         </GameContext.Provider>
     )

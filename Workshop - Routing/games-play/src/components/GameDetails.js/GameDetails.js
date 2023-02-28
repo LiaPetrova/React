@@ -6,21 +6,23 @@ import * as commentService from '../../services/commentService';
 
 export const GameDetails = () => {
 
-    const { addComment } = useContext(GameContext);
+    const { addComment, fetchGameDetails, selectGame } = useContext(GameContext);
     const { gameId } = useParams();
-    const [game, setGame] = useState({});
+    const game = selectGame(gameId);
 
+    const [comment, setComment] = useState('');
     const [errors, setErrors] = useState('');
 
 
-    useEffect(() => {
-        gameService.getOne(gameId)
-            .then(result => {
-                setGame(result);
-            })
-    }, []);
 
-    const [comment, setComment] = useState('');
+    useEffect(() => {
+        (async () => {
+            const gameDetails = await gameService.getOne(gameId);
+            const gameComments = await commentService.getByGameId(gameId);
+
+            fetchGameDetails(gameId, {...gameDetails, comments: gameComments.map(x => `${x.user.email}: ${x.text}`)});
+        })();
+    }, []);
 
     const onChange = (e) => {
         setComment(e.target.value);
@@ -31,7 +33,6 @@ export const GameDetails = () => {
 
         commentService.create(gameId, comment)
             .then(result => {
-                console.log(result)
                 addComment(gameId, comment);
             })
         setComment('');
