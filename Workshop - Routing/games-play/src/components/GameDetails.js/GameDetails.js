@@ -1,17 +1,16 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { GameContext } from "../../contexts/GameContext";
 import * as gameService from '../../services/gameService';
+import * as commentService from '../../services/commentService';
 
-export const GameDetails = ({
-    addComment
-}) => {
+export const GameDetails = () => {
+
+    const { addComment } = useContext(GameContext);
     const { gameId } = useParams();
     const [game, setGame] = useState({});
 
-    const [errors, setErrors] = useState({
-        username: '',
-        comment: ''
-    });
+    const [errors, setErrors] = useState('');
 
 
     useEffect(() => {
@@ -21,27 +20,21 @@ export const GameDetails = ({
             })
     }, []);
 
-    const [comment, setComment] = useState({
-        username: '',
-        comment: ''
-    });
+    const [comment, setComment] = useState('');
 
     const onChange = (e) => {
-        setComment(state => ({
-            ...state,
-            [e.target.name]: e.target.value
-        }));
+        setComment(e.target.value);
     };
 
     const addCommentHandler = (e) => {
         e.preventDefault();
 
-        const commentData = `${comment.username}: ${comment.comment}`;
-        addComment(gameId, commentData);
-        setComment({
-            username: '',
-            comment: ''
-        });
+        commentService.create(gameId, comment)
+            .then(result => {
+                console.log(result)
+                addComment(gameId, comment);
+            })
+        setComment('');
     }
 
     const lengthValidator = (e, minLength, maxLength = Number.MAX_SAFE_INTEGER) => {
@@ -55,10 +48,11 @@ export const GameDetails = ({
             errorMessage`${inputName} can't be longer than ${maxLength} characters long.`
         }
 
-        setErrors(state => ({
-            ...state,
-            [e.target.name]: errorMessage
-        }));
+        // setErrors(state => ({
+        //     ...state,
+        //     [e.target.name]: errorMessage
+        // }));
+        setErrors(errorMessage);
     };
 
     return (
@@ -92,7 +86,7 @@ export const GameDetails = ({
                 {/* Edit/Delete buttons ( Only for creator of this game )  */}
                 <div className="buttons">
                     <Link to={`/games/${gameId}/edit`} className="button">Edit</Link>
-                    
+
                     <a href="#" className="button">
                         Delete
                     </a>
@@ -103,27 +97,17 @@ export const GameDetails = ({
             <article className="create-comment">
                 <label>Add new comment:</label>
                 <form className="form" onSubmit={addCommentHandler}>
-                    <input
-                        type="text"
-                        value={comment.username}
-                        placeholder="John Doe"
-                        onChange={onChange}
-                        onBlur={(e) => lengthValidator(e, 3, 10)}
-                        name="username"
-                    />
-                    {errors.username &&
-                        <div className="error" style={{ color: 'darkred' }}>{errors.username}</div>
-                    }
+
                     <textarea
                         name="comment"
                         placeholder="Comment......"
-                        value={comment.comment}
+                        value={comment}
                         onChange={onChange}
                         onBlur={(e) => lengthValidator(e, 2)}
                     />
 
-                    {errors.comment &&
-                        <div className="error" style={{ color: 'darkred' }}>{errors.comment}</div>
+                    {errors &&
+                        <div className="error" style={{ color: 'darkred' }}>{errors}</div>
                     }
 
                     <input

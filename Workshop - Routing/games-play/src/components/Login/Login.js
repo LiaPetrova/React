@@ -1,6 +1,6 @@
 import * as authService from "../../services/authService";
 import { useNavigate } from 'react-router-dom';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useAuthContext } from "../../contexts/AuthContext";
 
 export const Login = () => {
@@ -8,7 +8,7 @@ export const Login = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const { userLogin } = useAuthContext;
+    const { userLogin } = useAuthContext();
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -21,7 +21,7 @@ export const Login = () => {
             })
             .catch((err) => {
                 setError(err)
-                // navigate('/');
+                console.log(err);
             });
 
     }

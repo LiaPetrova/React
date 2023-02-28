@@ -26,7 +26,7 @@ export const Edit = () => {
         const gameData = Object.fromEntries(new FormData(e.target));
         gameService.edit(gameId, gameData)
             .then(updatedGame => {
-                gameEdit(updatedGame);
+                gameEdit(gameId, updatedGame);
                 navigate(`/catalog/${gameId}`);
             });
 
