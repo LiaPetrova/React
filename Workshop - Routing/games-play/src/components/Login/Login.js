@@ -1,14 +1,14 @@
 import * as authService from "../../services/authService";
 import { useNavigate } from 'react-router-dom';
-import { useContext, useState } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
+import { useState } from "react";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 export const Login = () => {
 
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const { userLogin } = useContext(AuthContext);
+    const { userLogin } = useAuthContext;
 
     const onSubmit = (e) => {
         e.preventDefault();

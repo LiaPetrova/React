@@ -1,7 +1,27 @@
-const baseUrl = 'http://localhost:3030';
+import * as request from '../services/requester';
 
-export const getAll = () => {
-   return fetch(`${baseUrl}/data/games?sortBy=_createdOn%20desc`)
-        .then(res => res.json());
-        
+const baseUrl = 'http://localhost:3030/data/games';
+
+
+const getAll = () => {
+   return request.get(`${baseUrl}?sortBy=_createdOn%20desc`); 
+}
+
+const create = (gameData) => {
+    return request.post(baseUrl, gameData);
+}
+
+const getOne = (gameId) => {
+    return request.get(`${baseUrl}/${gameId}`);
+}
+
+const edit = (gameId, gameData) => {
+    return request.put(`${baseUrl}/${gameId}`, gameData);
+}
+
+export {
+    getAll,
+    create,
+    getOne,
+    edit
 }

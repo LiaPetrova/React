@@ -1,4 +1,6 @@
-const request = async (method, url, data, accessToken) => {
+const request = async (method, url, data) => {
+
+    const accessToken = JSON.parse(localStorage.getItem('auth')).accessToken || '';
     try {
         let buildReqest;
         
@@ -13,18 +15,24 @@ const request = async (method, url, data, accessToken) => {
                 })
             }
         } else {
+            const headers = {
+                'content-type': 'application/json'
+            };
+
+            if(accessToken) {
+                headers['X-Authorization'] = accessToken;
+            }
+        
             buildReqest = fetch(url, {
                 method,
-                headers: {
-                    'content-type': 'application/json',
-                },
+                headers,
                 body: JSON.stringify(data)
             })
         }
 
         const response = await buildReqest;
         let result = null;
-        
+
         if(response.status === 204) {   
            return result = await response;
         }

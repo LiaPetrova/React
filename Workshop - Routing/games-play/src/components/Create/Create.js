@@ -1,10 +1,23 @@
-export const Create = ({ addGameHandler }) => {
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { GameContext } from '../../contexts/GameContext';
+import * as gameService from '../../services/gameService';
 
+export const Create = () => {
+
+    const navigate = useNavigate();
+    const { gameAdd } = useContext(GameContext);
     const onSubmit = (e) => {
         e.preventDefault();
 
         const gameData = Object.fromEntries(new FormData(e.target));
-        addGameHandler(gameData);
+
+        gameService.create(gameData)
+        .then(result => {
+            gameAdd(result);
+            navigate('/catalog');
+        });
+    
     }
 
     return (
