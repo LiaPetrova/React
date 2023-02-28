@@ -1,4 +1,4 @@
-import { createContext, useEffect, useReducer, useState } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import * as gameService from "../services/gameService";
 
@@ -8,14 +8,16 @@ export const GameContext = createContext();
 const gameReducer = (state, action) => {
     switch (action.type) {
         case 'ADD_GAMES':
-            return action.payload.map(x => ({...x, comments: []}));
+            return action.payload.map(x => ({ ...x, comments: [] }));
         case 'ADD_GAME':
             return [action.payload, ...state];
         case 'EDIT_GAME':
-            case 'FETCH_GAME_DETAILS':
+        case 'FETCH_GAME_DETAILS':
             return state.map(x => x._id === action.gameId ? action.payload : x);
         case 'ADD_COMMENT':
-            return state.map(x => x._id === action.gameId ? {...x, comments: [...x.comments, action.payload]} : x);
+            return state.map(x => x._id === action.gameId ? { ...x, comments: [...x.comments, action.payload] } : x);
+        case 'REMOVE_GAME':
+            return state.filter(x => x._id !== action.gameId);
         default:
             return state;
     }
@@ -49,7 +51,7 @@ export const GameProvider = ({
     };
 
     const selectGame = (gameId) => {
-        return games.find(x => x._id === gameId) ||{};
+        return games.find(x => x._id === gameId) || {};
     }
 
 
@@ -68,7 +70,14 @@ export const GameProvider = ({
             payload: gameData,
             gameId
         });
-    }
+    };
+
+    const gameRemove = (gameId) => {
+        dispatch({
+            type: 'REMOVE_GAME',
+            gameId
+        });
+    };
 
     const addComment = (gameId, comment) => {
         dispatch({
@@ -89,7 +98,16 @@ export const GameProvider = ({
     };
 
     return (
-        <GameContext.Provider value={{ games, gameAdd, gameEdit, addComment, fetchGameDetails, selectGame }}>
+        <GameContext.Provider value=
+            {{
+                games,
+                gameAdd,
+                gameEdit,
+                addComment,
+                fetchGameDetails,
+                selectGame,
+                gameRemove
+            }}>
             {children}
         </GameContext.Provider>
     )
