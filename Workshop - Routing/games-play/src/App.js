@@ -14,6 +14,7 @@ import { Logout } from "./components/Logout/Logout";
 import { GameProvider } from "./contexts/GameContext";
 import { Edit } from "./components/Edit/Edit";
 import { PrivateRoute } from "./components/common/PrivateRoute";
+import { PrivateGuard } from "./components/common/PrivateGuard";
 
 const Register = lazy(() => import('./components/Register/Register'));
 
@@ -30,7 +31,6 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/login" element={<Login />} />
-                            <Route path="/logout" element={<Logout />} />
                             <Route path="/register" element={
                                 <Suspense fallback={<span>Loading...</span>} >
                                     <Register />
@@ -41,9 +41,13 @@ function App() {
                                     <Create />
                                 </PrivateRoute>
                             } />
+
+                            <Route element={<PrivateGuard />}>
+                                <Route path="/logout" element={<Logout />} />
+                                <Route path="/games/:gameId/edit" element={<Edit />} />
+                            </Route>
                             <Route path="/catalog" element={<Catalog />} />
                             <Route path="/catalog/:gameId" element={<GameDetails />} />
-                            <Route path="/games/:gameId/edit" element={<Edit />} />
 
                         </Routes>
 
