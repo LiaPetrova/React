@@ -13,36 +13,41 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { Logout } from "./components/Logout/Logout";
 import { GameProvider } from "./contexts/GameContext";
 import { Edit } from "./components/Edit/Edit";
+import { PrivateRoute } from "./components/common/PrivateRoute";
 
 const Register = lazy(() => import('./components/Register/Register'));
 
 function App() {
-    
-    
+
+
     return (
         <AuthProvider>
             <div id="box">
                 <Header />
 
                 <GameProvider>
-                <main id="main-content">
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/logout" element={<Logout />} />
-                        <Route path="/register" element={
-                            <Suspense fallback={<span>Loading...</span>} >
-                                <Register />
-                            </Suspense>
-                        } />
-                        <Route path="/create" element={<Create/>} />
-                        <Route path="/catalog" element={<Catalog/>} />
-                        <Route path="/catalog/:gameId" element={<GameDetails/>} />
-                         <Route path="/games/:gameId/edit" element={<Edit/>} />
+                    <main id="main-content">
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/logout" element={<Logout />} />
+                            <Route path="/register" element={
+                                <Suspense fallback={<span>Loading...</span>} >
+                                    <Register />
+                                </Suspense>
+                            } />
+                            <Route path="/create" element={
+                                <PrivateRoute>
+                                    <Create />
+                                </PrivateRoute>
+                            } />
+                            <Route path="/catalog" element={<Catalog />} />
+                            <Route path="/catalog/:gameId" element={<GameDetails />} />
+                            <Route path="/games/:gameId/edit" element={<Edit />} />
 
-                    </Routes>
+                        </Routes>
 
-                </main>
+                    </main>
 
                 </GameProvider>
 
