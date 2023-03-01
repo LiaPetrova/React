@@ -8,5 +8,6 @@ export const getByGameId = (gameId) => {
     const relations = encodeURIComponent(`user=_ownerId:users`);
     const search = encodeURIComponent(`gameId="${gameId}"`);
 
-    return request.get(`${baseUrl}?where=${search}&load=${relations}`);
+    const result = request.get(`${baseUrl}?where=${search}&load=${relations}`);
+    return result;
 };

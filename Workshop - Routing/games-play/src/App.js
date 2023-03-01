@@ -15,6 +15,7 @@ import { GameProvider } from "./contexts/GameContext";
 import { Edit } from "./components/Edit/Edit";
 import { PrivateRoute } from "./components/common/PrivateRoute";
 import { PrivateGuard } from "./components/common/PrivateGuard";
+import { GameOwner } from "./components/common/GameOwner";
 
 const Register = lazy(() => import('./components/Register/Register'));
 
@@ -44,8 +45,12 @@ function App() {
 
                             <Route element={<PrivateGuard />}>
                                 <Route path="/logout" element={<Logout />} />
-                                <Route path="/games/:gameId/edit" element={<Edit />} />
                             </Route>
+
+                            <Route path="/games/:gameId/edit" element={
+                                <GameOwner>
+                                    <Edit />
+                                </GameOwner>} />
                             <Route path="/catalog" element={<Catalog />} />
                             <Route path="/catalog/:gameId" element={<GameDetails />} />
 
