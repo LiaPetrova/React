@@ -37,7 +37,7 @@ export const useAuthContext = () => {
     return context;
 }
 
-// HOK
+// HOC
 
 export const withAuth = (Component) => {
     const WrapperComponent = (props) => {
