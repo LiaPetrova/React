@@ -7,7 +7,7 @@ export const ActivityItem = ({
         <article>
             <h1>{activity}</h1>
             <p>{type}</p>
-            <a href={link} target="_blank" >Go to website</a>
+            <a href={link}>Go to website</a>
         </article>
     );
 };

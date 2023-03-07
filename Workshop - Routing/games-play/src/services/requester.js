@@ -1,6 +1,6 @@
-const request = async (method, url, data) => {
+    const request = async (method, url, data) => {
 
-    const accessToken = JSON.parse(localStorage.getItem('auth')).accessToken || '';
+    const accessToken = JSON.parse(localStorage.getItem('auth'))?.accessToken || '';
     try {
         let buildReqest;
         
