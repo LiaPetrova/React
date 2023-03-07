@@ -5,7 +5,7 @@ export const ActivityItem = ({
 }) => {
     return (
         <article>
-            <h1>{activity}</h1>
+            <h1 className="activity">{activity}</h1>
             <p>{type}</p>
             <a href={link}>Go to website</a>
         </article>
