@@ -4,26 +4,28 @@ import { Search } from "./components/common/search/Search";
 import { UserList } from './components/user-list/UserList';
 import { Header } from "./components/common/Header";
 import './App.css';
+import { UserProvider } from "./contexts/UserContext";
 
 
 function App() {
 
-    
+
     return (
-    <div >
-      <Header/>
-      <main className="main">
+        <div >
+            <Header />
+            <UserProvider>
+                <main className="main">
 
-        <section className="card users-container">
-            <Search />
+                    <section className="card users-container">
+                        <Search />
 
-            <UserList />
-        </section>
-      </main>
-
-      <Footer />
-    </div>
-  );
+                        <UserList />
+                    </section>
+                </main>
+            </UserProvider>
+            <Footer />
+        </div>
+    );
 }
 
 export default App;

@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
 
 import * as userService from "../../services/userService";
 import { UserAdd } from "./user-add/UserAdd";
@@ -11,12 +12,7 @@ import { UserActions } from "./UserListConstants";
 
 export const UserList = () => {
   const [userAction, setUserAction] = useState({ action: null, user: null });
-  const [users, setUsers ] = useState([]);
-
-    useEffect(() => {
-        userService.getAll()
-        .then(users => setUsers(users));
-    }, []); 
+  const { users, addUser, editUser, deleteUser } = useContext(UserContext);
 
   const userActionClickHandler = (userId, action) => {
     userService.getOne(userId).then((user) => {
@@ -41,8 +37,9 @@ export const UserList = () => {
 
         userService.addOne(userData)
         .then(user => {
-            setUsers(oldUsers => [...oldUsers, user]);
+            addUser(user);
             closeHandler();
+            console.log(user);
         }
         )
         .catch(err => console.log(err));
@@ -72,8 +69,7 @@ export const UserList = () => {
 
         userService.editOne(userId, userData)
         .then(user => {
-            userService.getAll()
-            .then(users => setUsers(users));
+            editUser(user);
             closeHandler();
         });
     }
@@ -81,8 +77,7 @@ export const UserList = () => {
     const userDeleteHandler = (userId) => {
         userService.deleteOne(userId)
         .then(result => {
-            userService.getAll()
-            .then(users => setUsers(users));
+            deleteUser(userId);
             closeHandler();
         })
     }
