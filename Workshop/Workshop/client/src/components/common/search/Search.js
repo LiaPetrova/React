@@ -1,21 +1,27 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { UserContext } from '../../../contexts/UserContext';
 
 export const Search = () => {
 
     const [search, setSearch] = useState('');
     const [searchCriteria, setSearchCriteria] = useState('all');
+    const { filterUsers } = useContext(UserContext);
 
     const onSearchChange = (e) => {
         setSearch(e.target.value);
+        filterUsers(e.target.value, searchCriteria);
     };
 
     const onSubmitSearch = (e) => {
         e.preventDefault();
-        console.log(searchCriteria);
+        filterUsers(search, searchCriteria);
+
     };
 
     const onSearchCriteriaChange = (e) => {
         setSearchCriteria(e.target.value);
+        filterUsers(search, e.target.value);
+
     };
 
     return (

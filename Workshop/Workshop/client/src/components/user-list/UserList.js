@@ -13,7 +13,6 @@ import { UserActions } from "./UserListConstants";
 export const UserList = () => {
   const [userAction, setUserAction] = useState({ action: null, user: null });
   const { users, addUser, editUser, deleteUser } = useContext(UserContext);
-
   const userActionClickHandler = (userId, action) => {
     userService.getOne(userId).then((user) => {
       setUserAction({
@@ -39,7 +38,6 @@ export const UserList = () => {
         .then(user => {
             addUser(user);
             closeHandler();
-            console.log(user);
         }
         )
         .catch(err => console.log(err));
